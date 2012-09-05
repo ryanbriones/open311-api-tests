@@ -1,4 +1,23 @@
 class Open311
+  class APIError < StandardError
+    def initialize(api_response)
+      @api_response = api_response
+    end
+
+    def api_error_message
+      @api_response.first["description"]
+    end
+
+    def api_error_code
+      @api_response.first["code"]
+    end
+
+    def message
+      "API Error for #{@api_response.request.path.to_s}: #{@api_response.response.body}"
+    end
+  end
+
+
   include HTTParty
 
   base_uri ENV["OPEN311_BASE_URL"]
@@ -35,7 +54,7 @@ class Open311
   def do_with_error_handling(method, path, options = {})
     response = Open311.send(method, path, options)
     unless (200..299).include?(response.code)
-      raise "API Error for #{path}: #{response.body}"
+      raise APIError, response
     end
 
     response
