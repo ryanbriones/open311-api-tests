@@ -1,7 +1,9 @@
 source :rubygems
 
 gem "httparty"
-gem "cucumber"
-gem "rspec-expectations", :require => "rspec/expectations"
 gem "dotenv"
 
+group :test do
+  gem "cucumber"
+  gem "rspec-expectations", :require => "rspec/expectations"
+end

@@ -1,0 +1,59 @@
+#!/usr/bin/env ruby
+require "rubygems"
+require "bundler/setup"
+Bundler.require(:default)
+
+Dotenv.load
+unless ENV["OPEN311_API_KEY"]
+  $stderr.puts "Missing OPEN311_API_KEY Environment variable" 
+  exit 1
+end
+
+unless ENV["OPEN311_BASE_URL"]
+  $stderr.puts "Missing OPEN311_BASE_URL Environment variable" 
+  exit 1
+end
+
+require File.expand_path(File.dirname(__FILE__) + "/../features/support/chicago_open311")
+
+open311 = Open311.new
+service_list = open311.service_list
+
+service_list.each do |service|
+  puts "Service Name/Code: #{service["service_name"]} / #{service["service_code"]}"
+  puts "Service Description: #{service["description"]}"
+	service_definition = open311.service(service["service_code"])
+
+  if service_definition["attributes"]
+    puts "Attributes:"
+
+    required_attributes = service_definition["attributes"].select { |attribute| attribute["required"] }
+    optional_attributes = service_definition["attributes"].select { |attribute| !attribute["required"] }
+
+    required_attributes.each do |attribute|
+      attribute_display = "\t#{attribute["code"]}"
+      attribute_display << " ("
+      attribute_display << "required, " if attribute["required"]
+      attribute_display << "type: #{attribute["datatype"]}"
+      attribute_display << ")"
+      attribute_display << " #{attribute["description"]}"
+      puts attribute_display
+
+      puts "\t\tPossible Values: #{attribute["values"].map { |value| value["key"] }.join(", ")}" if attribute["values"]
+    end
+
+    optional_attributes.each do |attribute|
+      attribute_display = "\t#{attribute["code"]}"
+      attribute_display << " ("
+      attribute_display << "required, " if attribute["required"]
+      attribute_display << "type: #{attribute["datatype"]}"
+      attribute_display << ")"
+      attribute_display << " #{attribute["description"]}"
+      puts attribute_display
+
+      puts "\t\tPossible Values: #{attribute["values"].map { |value| value["key"] }.join(", ")}" if attribute["values"]
+    end
+  end
+  
+  puts
+end
