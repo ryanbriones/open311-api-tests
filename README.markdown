@@ -8,8 +8,9 @@ Ruby is required to run these tests. You can get Ruby on a Mac using [RVM](http:
 
 Once you have a working Ruby and rubygems install, download the required gem dependencies using Bundler:
 
-	gem install bundler
-	bundle install
+	# Shell/Terminal
+	$ gem install bundler
+	$ bundle install
 
 Setup a `.env` file in the root of the project with your Chicago Open311 API Key and Base URL of site to test
 
@@ -19,17 +20,23 @@ Setup a `.env` file in the root of the project with your Chicago Open311 API Key
 
 You can also `export` these environment variables into your shell
 
-	# Shell/Terminal Unix/Linux/Mac
-	export OPEN311_API_KEY=SECRET
-	OPEN311_BASE_URL=http://url.to.test/path/to/api/
+	# Shell/Terminal Unix/Linux/Mac-specific
+	$ export OPEN311_API_KEY=SECRET
+	$ export OPEN311_BASE_URL=http://url.to.test/path/to/api/
 
 The test suite with error and exit if you do not have OPEN311_API_KEY and OPEN311_BASE_URL environment variables setup.
 
 ## Running
 
-Run using the `cucumber` command
+Run tests using `rake`
 
-	cucumber
+	# Shell/Terminal
+	$ rake test
+
+The task `rake test` is actually aliased to the default task the following works as well
+
+	# Shell/Terminal
+	$ rake
 
 Your results should look something like this:
 
