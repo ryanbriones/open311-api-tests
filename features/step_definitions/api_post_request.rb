@@ -1,10 +1,22 @@
 When "I create a new request" do
+  locations = [
+    ["41.8836379", "-87.6302312"],
+    ["41.8819911", "-87.6337659"],
+    ["41.8891398", "-87.6442372"],
+    ["41.9005122", "-87.6315450"],
+    ["41.9078026", "-87.6299786"],
+  ]
+
+  colors = %w/CRM BLK BLU BRO GRN SIL YEL/
+
+  random_location = locations.shuffle.first
+  random_color = colors.shuffle.first
   @request_response = Open311.new.post_request(:service_code => "4ffa4c69601827691b000018", 
-                                               :lat => "41.8836379", 
-                                               :long => "-87.6302312", 
+                                               :lat => random_location[0],
+                                               :long => random_location[1],
                                                :attribute => {
                                                  "HOWMANYD" => rand(20) + 1,
-                                                 "FQSKA3" => "CRM",
+                                                 "FQSKA3" => random_color,
                                                  "FQSKA4" => "123456",
                                                  "FQSKA11" => "4D"
                                               })
